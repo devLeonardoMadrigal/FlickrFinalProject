@@ -27,5 +27,6 @@ struct PhotoCell: View {
                     .foregroundStyle(.cyan)
             }
         }
+        .accessibilityLabel("Photo titled \(photo.title)")
     }
 }

@@ -10,6 +10,8 @@ import SwiftUI
 struct PhotosListView: View {
     
     @StateObject var photosViewModel = PhotosViewModel(networkManager: NetworkManager())
+    
+    @Namespace var animationNamespace
         
     
     var body: some View {
@@ -42,21 +44,20 @@ struct PhotosListView: View {
             }
         }
     }
+    @ViewBuilder
+    func loadList(photos:[Photo]) -> some View {
+        List(photos, id: \.link){ photo in
+            NavigationLink {
+                PhotoDetails(photo: photo)
+                    .navigationTransition(.zoom(sourceID: photo.link, in: animationNamespace))
+            } label: {
+                PhotoCell(photo: photo)
+                    .accessibilityIdentifier("photo_cell_\(photo.link)")
+                    .matchedTransitionSource(id: photo.link, in: animationNamespace)
+            }
+        }.accessibilityIdentifier("photos_list")
+    }
 }
-
-@ViewBuilder
-func loadList(photos:[Photo]) -> some View {
-    
-    List(photos, id: \.link){ photo in
-        NavigationLink {
-            PhotoDetails(photo: photo)
-        } label: {
-            PhotoCell(photo: photo)
-                .accessibilityIdentifier("photo_cell_\(photo.link)")
-        }
-    }.accessibilityIdentifier("photos_list")
-}
-
 
 #Preview {
     PhotosListView()

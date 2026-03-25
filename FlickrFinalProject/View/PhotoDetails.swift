@@ -21,45 +21,51 @@ struct PhotoDetails: View {
         
         let dateFormatted = (try? Date(photo.date_taken, strategy: .iso8601))?.formatted(date: .abbreviated, time: .shortened) ?? "No Date"
         
-        VStack(alignment: .center){
-            
-            
-            Text("\(photo.title)")
-                .font(.title)
-            AsyncImage(url: URL(string: photo.media.m)){ image in
-                image
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 250,height: 250)
-            } placeholder : {
-                ProgressView()
-                    .frame(width: 250, height:250)
+        ScrollView {
+            VStack(alignment: .center){
+                
+                Text("\(photo.title)")
+                    .font(.title)
+                AsyncImage(url: URL(string: photo.media.m)){ image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 250,height: 250)
+                } placeholder : {
+                    ProgressView()
+                        .frame(width: 250, height:250)
+                }
+                
+                VStack(alignment:.leading){
+                    HStack{
+                        Text("Real image width: ").bold()
+                        Text("\(photoWidth ?? "No data")")
+                        
+                    }
+                    HStack{
+                        Text("Real image height: ").bold()
+                        Text(" \(photoHeight ?? "No data")")
+                        
+                    }
+                    HStack{
+                        Text("Author: ").bold()
+                        Text("\(photo.author)")
+                        
+                    }
+                    HStack{
+                        Text("Date taken: ").bold()
+                        Text("\(dateFormatted)")
+                        
+                    }
+                }
             }
-
-            VStack(alignment:.leading){
-                HStack{
-                    Text("Real image width: ").bold()
-                    Text("\(photoWidth ?? "No data")")
-
-                }
-                HStack{
-                    Text("Real image height: ").bold()
-                    Text(" \(photoHeight ?? "No data")")
-
-                }
-                HStack{
-                    Text("Author: ").bold()
-                    Text("\(photo.author)")
-
-                }
-                HStack{
-                    Text("Date taken: ").bold()
-                    Text("\(dateFormatted)")
-
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                ShareLink(item: URL(string: photo.link)!, subject: Text(photo.title), message: Text("Photo by \(photo.author)")) {
+                    Image(systemName: "square.and.arrow.up")
                 }
             }
-
-           
         }
         
     }
